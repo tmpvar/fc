@@ -19,6 +19,6 @@
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test/test.js -R spec",
     "cover": "istanbul cover _mocha -- test/test.js -R spec",
-    "minify": "browserify -e fc.js | uglify > fc.js.min.js"
+    "minify": "browserify -e fc.js | uglifyjs > fc.js.min.js"
   }
 }
