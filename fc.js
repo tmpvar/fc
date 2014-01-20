@@ -12,10 +12,10 @@ function fc(fn, autorun) {
   function tick(time) {
     var delta = time-last;
     last = time;
+    canvas.width = 0;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    ctx.fillStyle = "#223";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     ctx.save();
     fn && fn(delta);
     ctx.restore();
@@ -24,6 +24,11 @@ function fc(fn, autorun) {
     }
     dirty = false;
   }
+
+  ctx.fill = function(color) {
+    ctx.fillStyle = color || "#223";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  };
 
   autorun !== false && requestAnimationFrame(tick);
 
