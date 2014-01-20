@@ -32,6 +32,10 @@ ctx.dirty();
 
 ctx.start();
 
+// to fill the entire canvas with a color
+
+ctx.clear('red');
+
 // last but not least, to access the canvas
 
 ctx.canvas

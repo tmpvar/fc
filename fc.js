@@ -25,9 +25,11 @@ function fc(fn, autorun) {
     dirty = false;
   }
 
-  ctx.fill = function(color) {
+  ctx.clear = function(color) {
+    var orig = ctx.fillStyle;
     ctx.fillStyle = color || "#223";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = orig;
   };
 
   autorun !== false && requestAnimationFrame(tick);
