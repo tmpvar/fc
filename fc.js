@@ -32,7 +32,7 @@ function fc(fn, autorun) {
     ctx.fillStyle = orig;
   };
 
-  autorun !== false && requestAnimationFrame(tick);
+  requestAnimationFrame(tick);
 
   ctx.dirty = function() {
     if (!dirty) {
