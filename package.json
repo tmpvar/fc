@@ -1,6 +1,6 @@
 {
   "name": "fc",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "fc.js",
   "repository": {
@@ -19,6 +19,6 @@
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test/test.js -R spec",
     "cover": "istanbul cover _mocha -- test/test.js -R spec",
-    "minify": "browserify -e fc.js | uglifyjs > fc.js.min.js"
+    "minify": "browserify -e fc.js | uglifyjs > fc.min.js"
   }
 }
