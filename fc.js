@@ -11,8 +11,6 @@ function fc(fn, autorun) {
   
   function tick(time) {
     time = time || 0;
-    
-    console.log('time', time, 'last', last);
     var delta = time-last;
     last = time;
     canvas.width = 0;
