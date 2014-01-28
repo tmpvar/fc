@@ -7,7 +7,7 @@ if (typeof require === 'function') {
 
 var ok = function(a) {
   if (!a) {
-    throw new Error('not ok')
+    throw new Error('not ok');
   }
 };
 
@@ -22,14 +22,29 @@ describe('fc', function() {
     ok(document.body.lastChild === ctx.canvas);
   });
 
-  it('should callback with deltatime', function(t) {
+  it('should callback with 0 delta time immediately when autorun is false', function(t) {
     var ctx = fc(function(delta) {
       delta = parseFloat(delta);
       ok(!isNaN(delta));
-      ok(delta>0);
+      ok(delta === 0);
       t();
     }, false);
-    ctx.dirty();
+  });
+
+  it('should callback with delta time when dirtied', function(t) {
+    var expect = 0;
+    var ctx = fc(function(delta) {
+      delta = parseFloat(delta);
+      ok(!isNaN(delta));
+      ok(delta >= expect);
+      t();
+    }, false);
+
+    setTimeout(function() {
+      expect = 29;
+      ctx.dirty();
+    }, 30)
+
   });
 
   describe('autorun', function() {
@@ -54,16 +69,15 @@ describe('fc', function() {
         val++;
         ctx.stop(); 
         setTimeout(function() {
-          ok(val === 1);
+          ok(val === 2);
           t();
         }, 30);
       }, false);
 
       setTimeout(function() {
-        ok(val === 0);
+        ok(val === 1);
         ctx.start();
       }, 30);
-
     });
   });
 
@@ -80,7 +94,7 @@ describe('fc', function() {
       ctx.dirty();
       ctx.dirty();
       setTimeout(function() {
-        ok(val === 1);
+        ok(val === 2);
         t();
       }, 40);
     });

@@ -10,7 +10,7 @@ AKA: fullscreen canvas
 
 ```javascript
 
-var ctx = fc(function() {
+var ctx = fc(function(deltaTime) {
   
   // render stuff into ctx
 
@@ -40,7 +40,13 @@ ctx.clear('red');
 
 ctx.canvas
 
+// only render when dirtied
+
+var ctx = fc(function(deltaTime) {}, false);
+
 ```
+
+__note__: fc will render one time even if `autorun` is set false.  During this initial render `deltaTime` will be 0
 
 ## License
 

@@ -10,6 +10,9 @@ function fc(fn, autorun) {
   var last = 0, dirty = false, request;
   
   function tick(time) {
+    time = time || 0;
+    
+    console.log('time', time, 'last', last);
     var delta = time-last;
     last = time;
     canvas.width = 0;
@@ -32,7 +35,7 @@ function fc(fn, autorun) {
     ctx.fillStyle = orig;
   };
 
-  requestAnimationFrame(tick);
+  setTimeout(tick, 0);
 
   ctx.dirty = function() {
     if (!dirty) {
