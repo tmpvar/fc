@@ -8,7 +8,7 @@ function fc(fn, autorun) {
   var ctx = canvas.getContext('2d');
 
   var last = 0, dirty = false, request;
-  
+
   function tick(time) {
     time = time || 0;
     var delta = time-last;
@@ -52,6 +52,8 @@ function fc(fn, autorun) {
     autorun = true;
     requestAnimationFrame(tick);
   };
+
+  (window.attachEvent || window.addEventListener)('resize', ctx.dirty);
 
   ctx.canvas = canvas;
   return ctx;
