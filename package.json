@@ -20,5 +20,8 @@
     "test": "node_modules/mocha/bin/mocha test/test.js -R spec",
     "cover": "istanbul cover _mocha -- test/test.js -R spec",
     "minify": "browserify -e fc.js | uglifyjs > fc.min.js"
+  },
+  "dependencies": {
+    "csscolorparser": "^1.0.2"
   }
 }

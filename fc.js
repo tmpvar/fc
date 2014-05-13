@@ -1,11 +1,24 @@
+var parseCssColor = require('csscolorparser');
+
 // Fullscreen canvas
-function fc(fn, autorun) {
+function fc(fn, autorun, dimensions) {
   document.body.style.margin = "0px";
   document.body.style.padding = "0px";
 
   var canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
-  var ctx = canvas.getContext('2d');
+  var ctx;
+  dimensions = dimensions || 2;
+
+  if (dimensions === 2) {
+    ctx = canvas.getContext('2d');
+  } else if (dimensions === 3) {
+    ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  }
+
+  if (!ctx) {
+    return;
+  }
 
   var last = 0, dirty = false, request;
 
@@ -17,21 +30,35 @@ function fc(fn, autorun) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    ctx.save();
+    dimensions === 2 && ctx.save();
     fn && fn(delta);
-    ctx.restore();
+    dimensions === 2 && ctx.restore();
     if (autorun !== false) {
       requestAnimationFrame(tick);
     }
     dirty = false;
   }
 
-  ctx.clear = function(color) {
-    var orig = ctx.fillStyle;
-    ctx.fillStyle = color || "#223";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = orig;
-  };
+  if (dimensions === 2) {
+
+    ctx.clear = function(color) {
+      var orig = ctx.fillStyle;
+      ctx.fillStyle = color || "#223";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = orig;
+    };
+  } else {
+    ctx.clear = function(color) {
+      var r = parseCssColor(color).map(function(c) {
+        if (c > 1) {
+          return c/255;
+        }
+      });
+
+      ctx.clearColor(r[0], r[1], r[2], r[3]);
+    };
+  }
+
 
   setTimeout(tick, 0);
 
