@@ -1,5 +1,3 @@
-var parseCssColor = require('csscolorparser');
-
 // Fullscreen canvas
 function fc(fn, autorun, dimensions) {
   document.body.style.margin = "0px";
@@ -40,25 +38,13 @@ function fc(fn, autorun, dimensions) {
   }
 
   if (dimensions === 2) {
-
     ctx.clear = function(color) {
       var orig = ctx.fillStyle;
       ctx.fillStyle = color || "#223";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = orig;
     };
-  } else {
-    ctx.clear = function(color) {
-      var r = parseCssColor(color).map(function(c) {
-        if (c > 1) {
-          return c/255;
-        }
-      });
-
-      ctx.clearColor(r[0], r[1], r[2], r[3]);
-    };
   }
-
 
   setTimeout(tick, 0);
 
