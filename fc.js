@@ -5,6 +5,10 @@ function fc(fn, autorun, dimensions) {
 
   var canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
+  canvas.style.position = 'absolute';
+  canvas.style.left = '0px';
+  canvas.style.top = '0px';
+
   var ctx;
   dimensions = dimensions || 2;
 
@@ -24,9 +28,8 @@ function fc(fn, autorun, dimensions) {
     time = time || 0;
     var delta = time-last;
     last = time;
-    canvas.width = 0;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+
+    ctx.reset();
 
     dimensions === 2 && ctx.save();
     fn && fn(delta);
@@ -38,12 +41,28 @@ function fc(fn, autorun, dimensions) {
   }
 
   if (dimensions === 2) {
+    ctx.reset = function() {
+      canvas.width = 0;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
     ctx.clear = function(color) {
       var orig = ctx.fillStyle;
       ctx.fillStyle = color || "#223";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = orig;
     };
+  } else {
+    ctx.reset = function() {
+      if (canvas.width !== window.innerWidth) {
+        canvas.width = window.innerWidth;
+      }
+
+      if (canvas.height !== window.innerHeight) {
+        canvas.height = window.innerHeight;
+      }
+    }
   }
 
   setTimeout(tick, 0);
