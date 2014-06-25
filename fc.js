@@ -77,7 +77,7 @@ function fc(fn, autorun, dimensions) {
   ctx.stop = function() {
     autorun = false;
     dirty = false;
-    request && cancelAnimcationFrame(request);
+    request && cancelAnimationFrame(request);
   };
 
   ctx.start = function() {
