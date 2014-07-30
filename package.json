@@ -13,8 +13,10 @@
     "url": "https://github.com/tmpvar/fc/issues"
   },
   "devDependencies": {
+    "browserify": "^5.9.1",
+    "istanbul": "*",
     "mocha": "1.x",
-    "istanbul": "*"
+    "uglify-js": "^2.4.15"
   },
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test/test.js -R spec",
