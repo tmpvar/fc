@@ -1,100 +1,117 @@
-// Fullscreen canvas
-function fc(fn, autorun, dimensions) {
-  document.body.style.margin = "0px";
-  document.body.style.padding = "0px";
+;(function() {
 
-  var canvas = document.createElement('canvas');
-  document.body.appendChild(canvas);
-  canvas.style.position = 'absolute';
-  canvas.style.left = '0px';
-  canvas.style.top = '0px';
+  var performance = window.performance || {}
+  var performanceNow =
+    performance.now        ||
+    performance.now        ||
+    performance.mozNow     ||
+    performance.msNow      ||
+    performance.oNow       ||
+    performance.webkitNow  ||
+    function(){ return (new Date()).getTime() }
+  performanceNow = performanceNow.bind(performance)
 
-  var ctx;
-  dimensions = dimensions || 2;
+  // Fullscreen canvas
+  function fc(fn, autorun, dimensions) {
+    document.body.style.margin = "0px";
+    document.body.style.padding = "0px";
 
-  if (dimensions === 2) {
-    ctx = canvas.getContext('2d');
-  } else if (dimensions === 3) {
-    ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  }
+    var canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    canvas.style.position = 'absolute';
+    canvas.style.left = '0px';
+    canvas.style.top = '0px';
 
-  if (!ctx) {
-    return;
-  }
+    var ctx;
+    dimensions = dimensions || 2;
 
-  var last = 0, dirty = false, request;
-
-  function tick(time) {
-    time = time || 0;
-    var delta = time-last;
-    last = time;
-
-    ctx.reset();
-
-    dimensions === 2 && ctx.save();
-    fn && fn(delta);
-    dimensions === 2 && ctx.restore();
-    if (autorun !== false) {
-      requestAnimationFrame(tick);
+    if (dimensions === 2) {
+      ctx = canvas.getContext('2d');
+    } else if (dimensions === 3) {
+      ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     }
-    dirty = false;
-  }
 
-  if (dimensions === 2) {
-    ctx.reset = function() {
-      canvas.width = 0;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
+    if (!ctx) {
+      return;
+    }
 
-    ctx.clear = function(color) {
-      var orig = ctx.fillStyle;
-      ctx.fillStyle = color || "#223";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = orig;
-    };
-  } else {
-    ctx.reset = function() {
-      if (canvas.width !== window.innerWidth) {
+    var last = performanceNow(), request;
+
+    function tick() {
+      request = null;
+      var time = performanceNow();
+      var delta = time-last;
+      last = time;
+
+      ctx.reset();
+
+      dimensions === 2 && ctx.save();
+      fn && fn(delta);
+      dimensions === 2 && ctx.restore();
+      if (autorun && !request) {
+        request = requestAnimationFrame(tick);
+      }
+    }
+
+    if (dimensions === 2) {
+      ctx.reset = function() {
+        canvas.width = 0;
         canvas.width = window.innerWidth;
-      }
-
-      if (canvas.height !== window.innerHeight) {
         canvas.height = window.innerHeight;
+      };
+
+      ctx.clear = function(color) {
+        var orig = ctx.fillStyle;
+        ctx.fillStyle = color || "#223";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = orig;
+      };
+    } else {
+      ctx.reset = function() {
+        if (canvas.width !== window.innerWidth) {
+          canvas.width = window.innerWidth;
+        }
+
+        if (canvas.height !== window.innerHeight) {
+          canvas.height = window.innerHeight;
+        }
       }
     }
+
+    setTimeout(tick, 0);
+
+    ctx.dirty = function() {
+      if (!request) {
+        // reset the last time so we don't get weird jumps
+        last = performanceNow();
+
+        request = requestAnimationFrame(tick);
+      }
+    };
+
+    ctx.stop = function() {
+      autorun = false;
+      request && cancelAnimationFrame(request);
+    };
+
+    ctx.start = function() {
+      autorun = true;
+      if (!request) {
+        request = requestAnimationFrame(tick);
+      }
+    };
+
+    (window.attachEvent || window.addEventListener)('resize', ctx.dirty);
+
+    ctx.canvas = canvas;
+    return ctx;
+  };
+
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = fc;
   }
 
-  setTimeout(tick, 0);
-
-  ctx.dirty = function() {
-    if (!dirty) {
-      request = requestAnimationFrame(tick);
-      dirty = true;
-    }
-  };
-
-  ctx.stop = function() {
-    autorun = false;
-    dirty = false;
-    request && cancelAnimationFrame(request);
-  };
-
-  ctx.start = function() {
-    autorun = true;
-    requestAnimationFrame(tick);
-  };
-
-  (window.attachEvent || window.addEventListener)('resize', ctx.dirty);
-
-  ctx.canvas = canvas;
-  return ctx;
-};
-
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-  module.exports = fc;
-}
-
-if (typeof window !== 'undefined') {
-  window.fc = window.fc || fc;
-}
+  if (typeof window !== 'undefined') {
+    window.fc = window.fc || fc;
+  }
+})();
