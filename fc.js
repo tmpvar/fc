@@ -48,7 +48,7 @@
       dimensions === 2 && ctx.save();
       fn && fn(delta);
       dimensions === 2 && ctx.restore();
-      if (autorun && !request) {
+      if (autorun) {
         request = requestAnimationFrame(tick);
       }
     }
@@ -92,6 +92,7 @@
     ctx.stop = function() {
       autorun = false;
       request && cancelAnimationFrame(request);
+      request = null;
     };
 
     ctx.start = function() {
