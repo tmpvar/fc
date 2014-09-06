@@ -38,7 +38,7 @@
     var last = performanceNow(), request;
 
     function tick() {
-      request = null;
+
       var time = performanceNow();
       var delta = time-last;
       last = time;
@@ -47,6 +47,10 @@
 
       dimensions === 2 && ctx.save();
       fn && fn(delta);
+
+      // wait until after render to nullify the RAF sentinel
+      request = null;
+
       dimensions === 2 && ctx.restore();
       if (autorun) {
         request = requestAnimationFrame(tick);
@@ -54,20 +58,20 @@
     }
 
     if (dimensions === 2) {
-      ctx.reset = function() {
+      ctx.reset = function fc_reset() {
         canvas.width = 0;
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
       };
 
-      ctx.clear = function(color) {
+      ctx.clear = function fc_clear(color) {
         var orig = ctx.fillStyle;
         ctx.fillStyle = color || "#223";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = orig;
       };
     } else {
-      ctx.reset = function() {
+      ctx.reset = function fc_reset() {
         if (canvas.width !== window.innerWidth) {
           canvas.width = window.innerWidth;
         }
@@ -80,7 +84,7 @@
 
     setTimeout(tick, 0);
 
-    ctx.dirty = function() {
+    ctx.dirty = function fc_dirty() {
       if (!request) {
         // reset the last time so we don't get weird jumps
         last = performanceNow();
@@ -89,13 +93,13 @@
       }
     };
 
-    ctx.stop = function() {
+    ctx.stop = function fc_stop() {
       autorun = false;
       request && cancelAnimationFrame(request);
       request = null;
     };
 
-    ctx.start = function() {
+    ctx.start = function fc_start() {
       autorun = true;
       if (!request) {
         request = requestAnimationFrame(tick);
