@@ -108,6 +108,9 @@
 
     (window.attachEvent || window.addEventListener)('resize', ctx.dirty);
 
+    // resize to fullscreen immediately
+    ctx.reset();
+
     ctx.canvas = canvas;
     return ctx;
   };
