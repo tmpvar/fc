@@ -46,7 +46,7 @@
       ctx.reset();
 
       dimensions === 2 && ctx.save();
-      fn && fn(delta);
+      fn && fn.call(ctx, delta);
 
       // wait until after render to nullify the RAF sentinel
       request = null;
