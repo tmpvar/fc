@@ -13,6 +13,7 @@ AKA: fullscreen canvas
 var ctx = fc(function(deltaTime) {
   
   // render stuff into ctx
+  // `this` is also ctx for ease of use
 
 });
 
