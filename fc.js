@@ -1,7 +1,4 @@
 ;(function() {
-  if (typeof window === 'undefined') {
-    var window = {};
-  }
   var performance = window.performance || {}
   var performanceNow =
     performance.now        ||
