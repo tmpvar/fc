@@ -1,5 +1,7 @@
 ;(function() {
-
+  if (typeof window === 'undefined') {
+    var window = {};
+  }
   var performance = window.performance || {}
   var performanceNow =
     performance.now        ||
@@ -48,11 +50,8 @@
       dimensions === 2 && ctx.save();
       fn && fn.call(ctx, delta);
 
-      // wait until after render to nullify the RAF sentinel
-      request = null;
-
       dimensions === 2 && ctx.restore();
-      if (autorun) {
+      if (autorun && !request) {
         request = requestAnimationFrame(tick);
       }
     }
