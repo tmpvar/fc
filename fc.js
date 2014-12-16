@@ -36,8 +36,14 @@
 
     var last = performanceNow(), request;
 
-    function tick() {
+    function requestFrame() {
+      if (request === null) {
+        request = requestAnimationFrame(tick);
+      }
+    }
 
+    function tick() {
+      request = null;
       var time = performanceNow();
       var delta = time-last;
       last = time;
@@ -45,11 +51,12 @@
       ctx.reset();
 
       dimensions === 2 && ctx.save();
+
       fn && fn.call(ctx, delta);
 
       dimensions === 2 && ctx.restore();
-      if (autorun && !request) {
-        request = requestAnimationFrame(tick);
+      if (autorun) {
+        requestFrame();
       }
     }
 
@@ -81,12 +88,8 @@
     setTimeout(tick, 0);
 
     ctx.dirty = function fc_dirty() {
-      if (!request) {
-        // reset the last time so we don't get weird jumps
-        last = performanceNow();
-
-        request = requestAnimationFrame(tick);
-      }
+      last = performanceNow();
+      requestFrame();
     };
 
     ctx.stop = function fc_stop() {
@@ -97,9 +100,7 @@
 
     ctx.start = function fc_start() {
       autorun = true;
-      if (!request) {
-        request = requestAnimationFrame(tick);
-      }
+      requestFrame();
     };
 
     (window.attachEvent || window.addEventListener)('resize', ctx.dirty);
