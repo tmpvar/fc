@@ -24,6 +24,6 @@
     "minify": "browserify -e fc.js | uglifyjs > fc.min.js"
   },
   "dependencies": {
-    "ctx-get-transform": "^1.0.3"
+    "ctx-get-transform": "^1.1.0"
   }
 }

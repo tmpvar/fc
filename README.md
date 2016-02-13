@@ -52,6 +52,16 @@ var ctx = fc(function() {
     console.log(ctx.getTransform())
 })
 
+// transform a point from screen to world space
+
+var ctx = fc(function() {
+    ctx.translate(10, 100)
+    var incoming = [10, 10] // could be a the mouse pos or similar
+    var result = [0, 0]
+    ctx.pointToWorld(result, incoming) // project the point into the world
+    console.log(result)
+})
+
 ```
 
 __note__: fc will render one time even if `autorun` is set false.  During this initial render `deltaTime` will be 0
