@@ -45,6 +45,13 @@ ctx.canvas
 
 var ctx = fc(function(deltaTime) {}, false);
 
+// get the current 3x3 transformation matrix (2d only)
+
+var ctx = fc(function() {
+    ctx.translate(10, 100)
+    console.log(ctx.getTransform())
+})
+
 ```
 
 __note__: fc will render one time even if `autorun` is set false.  During this initial render `deltaTime` will be 0
