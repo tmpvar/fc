@@ -4,13 +4,13 @@ var patchGetContext = require('ctx-get-transform')
 
 var performance = window.performance || {}
 var performanceNow =
-  performance.now        ||
-  performance.now        ||
-  performance.mozNow     ||
-  performance.msNow      ||
-  performance.oNow       ||
-  performance.webkitNow  ||
-  function(){ return (new Date()).getTime() }
+  performance.now ||
+  performance.now ||
+  performance.mozNow ||
+  performance.msNow ||
+  performance.oNow ||
+  performance.webkitNow ||
+  function () { return (new Date()).getTime() }
 performanceNow = performanceNow.bind(performance)
 
 // Fullscreen canvas
@@ -23,6 +23,10 @@ function fc(fn, autorun, dimensions) {
   canvas.style.position = 'absolute';
   canvas.style.left = '0px';
   canvas.style.top = '0px';
+  // chrome has started giving subpixel results for window.innerWidth
+  // which makes it impossible to remove the scrollbars AND not include
+  // a single pixel gap
+  document.body.style.overflow = 'none'
 
   var ctx;
   dimensions = dimensions || 2;
@@ -48,7 +52,7 @@ function fc(fn, autorun, dimensions) {
   function tick() {
     request = null;
     var time = performanceNow();
-    var delta = time-last;
+    var delta = time - last;
     last = time;
 
     ctx.reset();
