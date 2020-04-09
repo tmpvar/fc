@@ -26,7 +26,7 @@ function fc(fn, autorun, dimensions) {
   // chrome has started giving subpixel results for window.innerWidth
   // which makes it impossible to remove the scrollbars AND not include
   // a single pixel gap
-  document.body.style.overflow = 'none'
+  document.body.style.overflow = 'hidden'
 
   var ctx;
   dimensions = dimensions || 2;
