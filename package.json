@@ -13,15 +13,15 @@
     "url": "https://github.com/tmpvar/fc/issues"
   },
   "devDependencies": {
-    "browserify": "^5.9.1",
+    "browserify": "^16.5.1",
     "istanbul": "*",
-    "mocha": "1.x",
+    "mocha": "^7.1.1",
     "uglify-js": "^2.4.15"
   },
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha test/test.js -R spec",
+    "test": "mocha test/test.js -R spec",
     "cover": "istanbul cover _mocha -- test/test.js -R spec",
-    "minify": "browserify -e fc.js | uglifyjs > fc.min.js"
+    "minify": "browserify -e fc.js -s fc | uglifyjs > fc.min.js"
   },
   "dependencies": {
     "ctx-get-transform": "^1.1.0"
